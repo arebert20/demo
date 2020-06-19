@@ -1,5 +1,5 @@
 #!/bin/bash
-# RCLONE UPLOAD CRON TAB SCRIPT 
+# GCLONE UPLOAD CRON TAB SCRIPT 
 # chmod a+x /home/plex/scripts/rclone-upload.sh
 # Type crontab -e and add line below (without #) and with correct path to the script
 # * * * * * /home/plex/scripts/rclone-upload.sh >/dev/null 2>&1
@@ -10,17 +10,17 @@ if pidof -o %PPID -x "$0"; then
    exit 1
 fi
 
-LOGFILE="/home/plex/logs/rclone-upload.log"
-FROM="/storage/local/"
-TO="gdrivecrypt:/"
+LOGFILE="/root/logs/gclone-upload.log"
+FROM="/root/Downloads/"
+TO="gc:{0AMrgJwLKzJV3Uk9PVA}"
 
 # CHECK FOR FILES IN FROM FOLDER THAT ARE OLDER THAN 15 MINUTES
-if find $FROM* -type f -mmin +15 | read
+if find $FROM* -type f -mmin +10 | read
   then
   start=$(date +'%s')
-  echo "$(date "+%d.%m.%Y %T") RCLONE UPLOAD STARTED" | tee -a $LOGFILE
-  # MOVE FILES OLDER THAN 15 MINUTES 
-  rclone move "$FROM" "$TO" --transfers=20 --checkers=20 --delete-after --min-age 15m --log-file=$LOGFILE
-  echo "$(date "+%d.%m.%Y %T") RCLONE UPLOAD FINISHED IN $(($(date +'%s') - $start)) SECONDS" | tee -a $LOGFILE
+  echo "$(date "+%d.%m.%Y %T") GCLONE UPLOAD STARTED" | tee -a $LOGFILE
+  # MOVE FILES OLDER THAN 10 MINUTES 
+  rclone move "$FROM" "$TO" --transfers=5 --checkers=5 --delete-after --min-age 10m --log-file=$LOGFILE
+  echo "$(date "+%d.%m.%Y %T") GCLONE UPLOAD FINISHED IN $(($(date +'%s') - $start)) SECONDS" | tee -a $LOGFILE
 fi
 exit
